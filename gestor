@@ -1,0 +1,496 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class restaurante {
+    private static Map<String, Cliente> clientes = new HashMap<>();
+    private static List<Plato> platos = new ArrayList<>();
+    private static List<Pedido> pedidos = new ArrayList<>();
+
+    private static JTextField txtNombreCliente;
+    private static JTextField txtApellidosCliente;
+    private static JTextField txtEdadCliente;
+    private static JTextField txtCedulaCliente;
+
+    private static JTextField txtCodigoPlato;
+    private static JTextField txtNombrePlato;
+    private static JTextField txtPrecioPlato;
+    private static JTextField txtCantidadPlato;
+    private static JComboBox<String> platosComboBox;
+
+    private static JTextField txtCedulaPedido;
+    private static JTextField txtCodigoPlatoPedido;
+    private static JTextField txtCantidadPedido;
+
+    public static void main(String[] args) {
+        // Crear la ventana principal
+        JFrame frame = new JFrame("Gestión de Restaurante");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+
+        // Crear los paneles
+        JPanel panelClientes = new JPanel();
+        JPanel panelPlatos = new JPanel();
+        JPanel panelPedidos = new JPanel();
+
+        // Agregar paneles a la ventana
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.addTab("Clientes", panelClientes);
+        tabbedPane.addTab("Platos", panelPlatos);
+        tabbedPane.addTab("Pedidos", panelPedidos);
+        frame.add(tabbedPane);
+
+        // Panel de Clientes
+        txtNombreCliente = new JTextField(20);
+        txtApellidosCliente = new JTextField(20);
+        txtEdadCliente = new JTextField(5);
+        txtCedulaCliente = new JTextField(10);
+
+        JButton btnIngresarCliente = new JButton("Ingresar Cliente");
+        JButton btnConsultarCliente = new JButton("Consultar Cliente");
+        JButton btnActualizarCliente = new JButton("Actualizar Cliente");
+
+        panelClientes.add(new JLabel("Nombre: "));
+        panelClientes.add(txtNombreCliente);
+        panelClientes.add(new JLabel("Apellidos: "));
+        panelClientes.add(txtApellidosCliente);
+        panelClientes.add(new JLabel("Edad: "));
+        panelClientes.add(txtEdadCliente);
+        panelClientes.add(new JLabel("Cédula: "));
+        panelClientes.add(txtCedulaCliente);
+        panelClientes.add(btnIngresarCliente);
+        panelClientes.add(btnConsultarCliente);
+        panelClientes.add(btnActualizarCliente);
+
+        // Panel de Platos
+        txtCodigoPlato = new JTextField(5); // Campo para ingresar código de plato
+        txtNombrePlato = new JTextField(20);
+        txtPrecioPlato = new JTextField(10);
+        txtCantidadPlato = new JTextField(5);
+        platosComboBox = new JComboBox<>();
+
+        JButton btnCrearPlato = new JButton("Crear Plato");
+        JButton btnConsultarPlato = new JButton("Consultar Plato");
+        JButton btnActualizarPlato = new JButton("Actualizar Plato");
+
+        panelPlatos.add(new JLabel("Código del Plato: ")); // Etiqueta para el código del plato
+        panelPlatos.add(txtCodigoPlato); // Campo para ingresar código de plato
+        panelPlatos.add(new JLabel("Nombre del Plato: "));
+        panelPlatos.add(txtNombrePlato);
+        panelPlatos.add(new JLabel("Precio por Unidad: "));
+        panelPlatos.add(txtPrecioPlato);
+        panelPlatos.add(new JLabel("Cantidad Disponible: "));
+        panelPlatos.add(txtCantidadPlato);
+        panelPlatos.add(new JLabel("Plato: "));
+        panelPlatos.add(platosComboBox);
+        panelPlatos.add(btnCrearPlato);
+        panelPlatos.add(btnConsultarPlato);
+        panelPlatos.add(btnActualizarPlato);
+
+        // Panel de Pedidos
+        txtCedulaPedido = new JTextField(10);
+        txtCodigoPlatoPedido = new JTextField(5); // Campo para ingresar código de plato en pedidos
+        txtCantidadPedido = new JTextField(5);
+
+        JButton btnGenerarPedido = new JButton("Generar Pedido");
+        JButton btnConsultarPedidosCliente = new JButton("Consultar Pedidos Cliente");
+        JButton btnConsultarBalance = new JButton("Consultar Balance");
+
+        panelPedidos.add(new JLabel("Cédula del Cliente: "));
+        panelPedidos.add(txtCedulaPedido);
+        panelPedidos.add(new JLabel("Código del Plato: ")); // Etiqueta para el código de plato en pedidos
+        panelPedidos.add(txtCodigoPlatoPedido); // Campo para ingresar código de plato en pedidos
+        panelPedidos.add(new JLabel("Cantidad: "));
+        panelPedidos.add(txtCantidadPedido);
+        panelPedidos.add(btnGenerarPedido);
+        panelPedidos.add(btnConsultarPedidosCliente);
+        panelPedidos.add(btnConsultarBalance);
+
+        // Manejar eventos de los botones
+        btnIngresarCliente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ingresarCliente();
+            }
+        });
+
+        btnConsultarCliente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consultarCliente();
+            }
+        });
+
+        btnActualizarCliente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actualizarCliente();
+            }
+        });
+
+        btnCrearPlato.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                crearPlato();
+            }
+        });
+
+        btnConsultarPlato.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consultarPlato();
+            }
+        });
+
+        btnActualizarPlato.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actualizarPlato();
+            }
+        });
+
+        btnGenerarPedido.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                generarPedido();
+            }
+        });
+
+        btnConsultarPedidosCliente.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consultarPedidosCliente();
+            }
+        });
+
+        btnConsultarBalance.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consultarBalance();
+            }
+        });
+
+        // Agregar esta línea para cargar los platos en el JComboBox al iniciar la
+        // aplicación
+        for (Plato plato : platos) {
+            platosComboBox.addItem(plato.getNombre());
+        }
+
+        // Mostrar la ventana
+        frame.setVisible(true);
+    }
+
+    static class Cliente {
+        String nombre;
+        String apellidos;
+        int edad;
+        String cedula;
+
+        public Cliente(String nombre, String apellidos, int edad, String cedula) {
+            this.nombre = nombre;
+            this.apellidos = apellidos;
+            this.edad = edad;
+            this.cedula = cedula;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public void setNombre(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public String getApellidos() {
+            return apellidos;
+        }
+
+        public void setApellidos(String apellidos) {
+            this.apellidos = apellidos;
+        }
+
+        public int getEdad() {
+            return edad;
+        }
+
+        public void setEdad(int edad) {
+            this.edad = edad;
+        }
+
+        public String getCedula() {
+            return cedula;
+        }
+
+        public void setCedula(String cedula) {
+            this.cedula = cedula;
+        }
+    }
+
+    static class Plato {
+        int codigo; // Código del plato
+        String nombre;
+        double precioUnidad;
+        int cantidadDisponible;
+
+        public Plato(int codigo, String nombre, double precioUnidad, int cantidadDisponible) {
+            this.codigo = codigo;
+            this.nombre = nombre;
+            this.precioUnidad = precioUnidad;
+            this.cantidadDisponible = cantidadDisponible;
+        }
+
+        public int getCodigo() {
+            return codigo;
+        }
+
+        public void setCodigo(int codigo) {
+            this.codigo = codigo;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public void setNombre(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public double getPrecioUnidad() {
+            return precioUnidad;
+        }
+
+        public void setPrecioUnidad(double precioUnidad) {
+            this.precioUnidad = precioUnidad;
+        }
+
+        public int getCantidadDisponible() {
+            return cantidadDisponible;
+        }
+
+        public void setCantidadDisponible(int cantidadDisponible) {
+            this.cantidadDisponible = cantidadDisponible;
+        }
+    }
+
+    static class Pedido {
+        Cliente cliente;
+        Plato plato;
+        int cantidad;
+
+        public Pedido(Cliente cliente, Plato plato, int cantidad) {
+            this.cliente = cliente;
+            this.plato = plato;
+            this.cantidad = cantidad;
+        }
+
+        public Cliente getCliente() {
+            return cliente;
+        }
+
+        public Plato getPlato() {
+            return plato;
+        }
+
+        public int getCantidad() {
+            return cantidad;
+        }
+    }
+
+    // Funciones de gestión de datos
+
+    private static void ingresarCliente() {
+        String nombre = txtNombreCliente.getText();
+        String apellidos = txtApellidosCliente.getText();
+        int edad = Integer.parseInt(txtEdadCliente.getText());
+        String cedula = txtCedulaCliente.getText();
+
+        Cliente cliente = new Cliente(nombre, apellidos, edad, cedula);
+        clientes.put(cedula, cliente);
+
+        JOptionPane.showMessageDialog(null, "Cliente ingresado con éxito.");
+    }
+
+    private static void consultarCliente() {
+        String cedula = txtCedulaCliente.getText();
+        Cliente cliente = clientes.get(cedula);
+
+        if (cliente != null) {
+            JOptionPane.showMessageDialog(null, "Nombre: " + cliente.getNombre() + "\nApellidos: " +
+                    cliente.getApellidos() + "\nEdad: " + cliente.getEdad() + "\nCédula: " + cliente.getCedula());
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente no encontrado.");
+        }
+    }
+
+    private static void actualizarCliente() {
+        String cedula = txtCedulaCliente.getText();
+        Cliente cliente = clientes.get(cedula);
+
+        if (cliente != null) {
+            String nombre = txtNombreCliente.getText();
+            String apellidos = txtApellidosCliente.getText();
+            int edad = Integer.parseInt(txtEdadCliente.getText());
+
+            cliente.setNombre(nombre);
+            cliente.setApellidos(apellidos);
+            cliente.setEdad(edad);
+
+            JOptionPane.showMessageDialog(null, "Cliente actualizado con éxito.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente no encontrado.");
+        }
+    }
+
+    private static void crearPlato() {
+        int codigo = Integer.parseInt(txtCodigoPlato.getText()); // Obtener el código del plato
+        String nombre = txtNombrePlato.getText();
+        double precioUnidad = Double.parseDouble(txtPrecioPlato.getText());
+        int cantidadDisponible = Integer.parseInt(txtCantidadPlato.getText());
+
+        Plato plato = new Plato(codigo, nombre, precioUnidad, cantidadDisponible);
+        platos.add(plato);
+
+        platosComboBox.addItem(plato.getNombre());
+
+        JOptionPane.showMessageDialog(null, "Plato creado con éxito.");
+    }
+
+    private static void consultarPlato() {
+        String platoSeleccionado = (String) platosComboBox.getSelectedItem();
+        Plato plato = buscarPlatoPorNombre(platoSeleccionado);
+
+        if (plato != null) {
+            JOptionPane.showMessageDialog(null, "Código: " + plato.getCodigo() + "\nNombre: " + plato.getNombre()
+                    + "\nPrecio por Unidad: " + plato.getPrecioUnidad() + "\nCantidad Disponible: "
+                    + plato.getCantidadDisponible());
+        } else {
+            JOptionPane.showMessageDialog(null, "Plato no encontrado.");
+        }
+    }
+
+    private static void actualizarPlato() {
+        String platoSeleccionado = (String) platosComboBox.getSelectedItem();
+        Plato plato = buscarPlatoPorNombre(platoSeleccionado);
+
+        if (plato != null) {
+            int codigo = Integer.parseInt(txtCodigoPlato.getText()); // Obtener el nuevo código del plato
+            String nombre = txtNombrePlato.getText();
+            double precioUnidad = Double.parseDouble(txtPrecioPlato.getText());
+            int cantidadDisponible = Integer.parseInt(txtCantidadPlato.getText());
+
+            plato.setCodigo(codigo);
+            plato.setNombre(nombre);
+            plato.setPrecioUnidad(precioUnidad);
+            plato.setCantidadDisponible(cantidadDisponible);
+
+            platosComboBox.addItem(plato.getNombre());
+
+            JOptionPane.showMessageDialog(null, "Plato actualizado con éxito.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Plato no encontrado.");
+        }
+    }
+
+    private static void generarPedido() {
+        String cedula = txtCedulaPedido.getText();
+        Cliente cliente = clientes.get(cedula);
+
+        if (cliente == null) {
+            int option = JOptionPane.showConfirmDialog(null, "Cliente no registrado. ¿Desea registrarlo?",
+                    "Cliente no encontrado", JOptionPane.YES_NO_OPTION);
+
+            if (option == JOptionPane.YES_OPTION) {
+                ingresarCliente();
+                return;
+            }
+        }
+
+        int codigoPlato = Integer.parseInt(txtCodigoPlatoPedido.getText()); // Obtener el código de plato
+        Plato plato = buscarPlatoPorCodigo(codigoPlato);
+
+        if (plato != null) {
+            int cantidad = Integer.parseInt(txtCantidadPedido.getText());
+
+            if (cantidad <= plato.getCantidadDisponible()) {
+                Pedido pedido = new Pedido(cliente, plato, cantidad);
+                pedidos.add(pedido);
+
+                plato.setCantidadDisponible(plato.getCantidadDisponible() - cantidad);
+
+                JOptionPane.showMessageDialog(null, "Pedido generado con éxito.");
+            } else {
+                JOptionPane.showMessageDialog(null, "No hay suficientes unidades disponibles de este plato.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Plato no encontrado.");
+        }
+    }
+
+    private static void consultarPedidosCliente() {
+        String cedula = txtCedulaPedido.getText();
+        Cliente cliente = clientes.get(cedula);
+
+        if (cliente != null) {
+            StringBuilder pedidosCliente = new StringBuilder();
+            for (Pedido pedido : pedidos) {
+                if (pedido.getCliente() == cliente) {
+                    pedidosCliente.append("Plato: ").append(pedido.getPlato().getNombre()).append(", Cantidad: ")
+                            .append(pedido.getCantidad()).append("\n");
+                }
+            }
+
+            JOptionPane.showMessageDialog(null, "Pedidos del cliente:\n" + pedidosCliente.toString());
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente no encontrado.");
+        }
+    }
+
+    private static void consultarBalance() {
+        double totalGanancias = 0;
+        StringBuilder balance = new StringBuilder();
+
+        for (Plato plato : platos) {
+            int cantidadPedidos = 0;
+
+            for (Pedido pedido : pedidos) {
+                if (pedido.getPlato() == plato) {
+                    cantidadPedidos += pedido.getCantidad();
+                }
+            }
+
+            double gananciasPorPlato = cantidadPedidos * plato.getPrecioUnidad();
+            totalGanancias += gananciasPorPlato;
+
+            balance.append("Código: ").append(plato.getCodigo()).append(", Nombre: ").append(plato.getNombre())
+                    .append(", Cantidad de Pedidos: ").append(cantidadPedidos).append(", Ganancias: ")
+                    .append(gananciasPorPlato).append("\n");
+        }
+
+        balance.append("Ganancias Totales: ").append(totalGanancias);
+
+        JOptionPane.showMessageDialog(null, "Balance de Pedidos:\n" + balance.toString());
+    }
+
+    private static Plato buscarPlatoPorNombre(String nombre) {
+        for (Plato plato : platos) {
+            if (plato.getNombre().equals(nombre)) {
+                return plato;
+            }
+        }
+        return null;
+    }
+
+    private static Plato buscarPlatoPorCodigo(int codigo) {
+        for (Plato plato : platos) {
+            if (plato.getCodigo() == codigo) {
+                return plato;
+            }
+        }
+        return null;
+    }
+}
